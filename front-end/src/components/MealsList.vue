@@ -20,6 +20,7 @@
 
 export default{
     name: 'MealsList',
+    props: ['meals'],
     data(){ //give us the next seven days as an array
         return{
             nextSevenDays: Array(7).fill().ap((_, i) => {
