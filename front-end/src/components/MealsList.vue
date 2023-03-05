@@ -1,4 +1,5 @@
 <template>
+<div class="list-container">
     <h3>Planned Meals</h3>
     <div v-for="day in nextSevenDays"  :key="day.getDate()" class="list-item">
             <h3>{{ day.getDate() }}</h3>
@@ -12,6 +13,7 @@
                 </router-link>
             </div>
     </div>
+</div>
 </template>
 
 <script>
