@@ -10,18 +10,11 @@ import MealsList from '../components/MealsList';
 import IngredientsList from '../components/IngredientsList.vue';
 export default {
     name: 'HomePage',
+    props: ['ingredients'],
     components:{
         MealsList,
         IngredientsList,
     },
-    data(){
-    return{
-        ingredients: [
-            { name: 'Honey', amount: 3, units: 'tablespoons' },
-            { name: 'Self-Rising Flour', amount: 10, units: 'cups'},
-        ],
-        meals: [],
-    }
-    }
+   
 }
 </script>
