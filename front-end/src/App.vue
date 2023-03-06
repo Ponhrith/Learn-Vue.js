@@ -1,6 +1,10 @@
 <template>
   <h1>Meal Tracker</h1>
-  <router-view></router-view>
+  <router-view 
+  :ingredients="ingredients"
+  :meals="meals"
+  @addIngredient="addIngredient">
+  </router-view>
 </template>
 
 <script>
@@ -8,9 +12,20 @@
 
 export default {
   name: 'App',
-  components: {
-
-  }
+  data(){
+    return{
+        ingredients: [
+            { name: 'Honey', amount: 3, units: 'tablespoons' },
+            { name: 'Self-Rising Flour', amount: 10, units: 'cups'},
+        ],
+        meals: [],
+    }
+    },
+    methods: {
+      addIngredient({ name, amount, units }){
+        this.ingredients.push({ name, amount, units })
+      }
+    }
 }
 </script>
 
