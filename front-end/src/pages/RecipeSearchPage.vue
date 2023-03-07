@@ -10,13 +10,19 @@
             />
         <button 
             class="full-width space-after"
-            @click="sumbitSearch"
+            @click="submitSearch"
             >Search
         </button>
-        <p v-if="hasSearched">Enter a keyword and click "search" to find recipes</p>
+        <p v-if="!hasSearched">Enter a keyword and click "search" to find recipes</p>
         <p v-if="hasSearched && searchResults.length === 0">Thre were no results for that keyword</p>
-        <div v-for="recipe in searchResultss" :key="recipe.id" class="search-list-item">
-                <h3>{{ recipe.name }}</h3>
+        <div 
+        v-for="recipe in searchResults" 
+        :key="recipe.id" 
+        class="search-list-item"    
+        @click="selectRecipe(recipe)"
+        >
+        <!-- click handler called the method we just defined with whatever recipe the user has selected -->
+        <h3>{{ recipe.name }}</h3>
         </div>
         </div>
     </div>
@@ -25,7 +31,7 @@
 <script>
 export default{
     name: 'RecipeSearchPage',
-    props:['recpies'],
+    props:['recipes'],
     data() {
         return{
             searchString: '',
@@ -33,13 +39,18 @@ export default{
             hasSearched: false
         }
     },
-    method: {
+    methods: {
         submitSearch(){
             this.searchResults = this.recipes.filter(recipe => {
-                return recipe.name.toLowerCase().includes(this.searchString.toLocaleLowerCase());
+                return recipe.name.toLowerCase().includes(this.searchString.toLowerCase());
             });
-            console.log(this.searchResults);
             this.hasSearched = true;
+            
+        },
+        selectRecipe(recipe){
+            const date = new Date (this.$route.query.date);
+            this.$emit('addMeal', { date, recipe });
+            this.$router.push('/');
         }
     }
 }

@@ -1,20 +1,36 @@
 <template>
-    <h1>This is the Home Page</h1>
-    <MealsList :meals="meals"/>
+    <div class="page-container">
+        <div class="column">
+        <MealsList :meals="meals" @removeMeal="removeMeal"/>
+    </div>
+   <div class="column">
     <IngredientsList :ingredients="ingredients"/>
+    <router-link to="/shopping-list">
+        <button class="shopping-list-button list-container full-width">
+            Generate Shopping List
+        </button>
+    </router-link>
+   </div>
+    </div>
 </template>
 
 <script>
 
-import MealsList from '../components/MealsList';
+import MealsList from '../components/MealsList.vue';
 import IngredientsList from '../components/IngredientsList.vue';
 export default {
     name: 'HomePage',
-    props: ['ingredients'],
+    // props: ['ingredients','meals'],
+    props: ['ingredients', 'meals'],
     components:{
         MealsList,
         IngredientsList,
     },
+    methods:{
+        removeMeal(data){
+            this.$emit('removeMeal', data);
+        },
+    }
    
 }
 </script>

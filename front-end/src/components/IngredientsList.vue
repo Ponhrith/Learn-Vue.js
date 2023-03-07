@@ -7,7 +7,7 @@
             <p>{{ ingredient.name }} {{ ingredeint.units }}</p>
         </div>
         <router-link to="/add-ingredient">
-            <button>+ Add Ingredient</button>
+            <button class="full-width space-before">+ Add Ingredient</button>
         </router-link>
     </div>
 </template>

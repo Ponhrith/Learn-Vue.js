@@ -4,8 +4,10 @@
   :ingredients="ingredients"
   :meals="meals"
   :recipes="recipes"
-  @addIngredient="addIngredient">
-  </router-view>
+  @addIngredient="addIngredient"
+  @addMeal="addMeal"
+  @removeMeal="removeMeal"
+  ></router-view>
 </template>
 
 <script>
@@ -26,6 +28,16 @@ export default {
     methods: {
       addIngredient({ name, amount, units }){
         this.ingredients.push({ name, amount, units })
+      },
+      addMeal({ date, recipe }){
+        this.meals.push({ date, recipe });
+      },
+      removeMeal({ date }){
+        this.meals = this.meals.filter(meal => {
+          return meal.date.getYear() !== date.getYear()
+                    || meal.date.getMonth() !== date.getMonth()
+                    || meal.date.getDate() !== date.getDate();
+        })
       }
     }
 }
