@@ -3,12 +3,13 @@
   <router-view 
   :ingredients="ingredients"
   :meals="meals"
+  :recipes="recipes"
   @addIngredient="addIngredient">
   </router-view>
 </template>
 
 <script>
-
+import recipes from './fake-data';
 
 export default {
   name: 'App',
@@ -19,6 +20,7 @@ export default {
             { name: 'Self-Rising Flour', amount: 10, units: 'cups'},
         ],
         meals: [],
+        recipes,
     }
     },
     methods: {
