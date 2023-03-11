@@ -37,7 +37,7 @@ export default{
         return{
             searchString: '',
             searchResults: [],
-            hasSearched: false
+            hasSearched: false,
         }
     },
     methods: {
@@ -47,7 +47,7 @@ export default{
                     console.log(response.data);
                     this.searchResults = response.data;
                     this.hasSearched = true;
-                })
+                });
             
             
         },
