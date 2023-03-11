@@ -10,16 +10,19 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     name: 'ShoppingListPage',
     data(){
         return{
-            shoppingListItems: [
-                '3 cups flour',
-                '5 tablespoons of honey',
-                '2 lbs of chicken',
-            ]
+            shoppingListItems: []
         }
+    },
+    created(){
+        axios.get('http://localhost:8000/api/shopping-list')
+        .then(response => {
+            this.shoppingListItems = response.data;
+        });
     }
 }   
 </script>

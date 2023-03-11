@@ -3,7 +3,6 @@
   <router-view 
   :ingredients="ingredients"
   :meals="meals"
-  :recipes="recipes"
   @addIngredient="addIngredient"
   @addMeal="addMeal"
   @removeMeal="removeMeal"
@@ -11,26 +10,55 @@
 </template>
 
 <script>
-import recipes from './fake-data';
+
+import axios from 'axios';
 
 export default {
   name: 'App',
   data(){
     return{
-        ingredients: [
-            { name: 'Honey', amount: 3, units: 'tablespoons' },
-            { name: 'Self-Rising Flour', amount: 10, units: 'cups'},
-        ],
+        ingredients: [],
         meals: [],
-        recipes,
+        recipes: [],
     }
+    },
+    created(){
+      axios.get('http://localhost:8000/api/ingredients')
+      .then(response => {
+        console.log(response.data);
+        this.ingredients = response.data
+      });
+      axios.get('http://localhost:8000/api/meals')
+        .then(response => {
+          console.log(response.data);
+          this.meals = response.data.map(meal => ({
+            ...meal,
+            date: new Date(meal.date),
+          }));
+        })
     },
     methods: {
       addIngredient({ name, amount, units }){
-        this.ingredients.push({ name, amount, units })
+        axios.post('http://localhost:8000/api/ingredients', {
+          name,
+          amount,
+          units
+        })
+        .then(response => {
+            this.ingredients = response.data;
+        });
       },
       addMeal({ date, recipe }){
-        this.meals.push({ date, recipe });
+        axios.post('http://localhost:8000/api/meals', {
+          date,
+          recipeId: recipe.id,
+        })
+        .then(response => {
+          this.meals = response.data.map(meal => ({
+            ...meal,
+            date: new Date(meal.date),
+          }));
+        })
       },
       removeMeal({ date }){
         this.meals = this.meals.filter(meal => {

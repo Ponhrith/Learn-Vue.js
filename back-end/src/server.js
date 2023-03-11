@@ -1,12 +1,14 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import { v4 as uuid } from 'uuid';
+import cors from 'cors';
 import { generateShoppingList } from './generateShoppingList.js';
 
 
 const startServer = async() => {
     
 const app = express();
+app.use(cors());
 
 // const { v4: uuid } = require('uuid');
 
