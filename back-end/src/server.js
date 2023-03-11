@@ -103,27 +103,44 @@ app.post('/api/meals', async (req, res) => {
 });
 
 // /api/ingredients/Apples
-app.put('/api/ingredients/:name', (req, res) => {
+app.put('/api/ingredients/:name', async (req, res) => {
     const { name: ingredientName } = req.params;
     const { name, amount, units } = req.body;
 
-    const ingredient = ingredients.find(ingredient => ingredient.name === ingredientName );
+    // const ingredient = ingredients.find(ingredient => ingredient.name === ingredientName );
+
+    const ingredient = await db.collection('ingredient').findOne({ name: ingredientName });
 
     ingredient.name = name || ingredient.name;
     ingredient.units = units || ingredient.units;
     ingredient.amount = amount || ingredient.name;
 
-    res.json(ingredients);
+    await db.collection('ingredients').updateOne({ name: ingredientName }, {
+        $set: ingredient,
+    });
+
+    const updatedIngredients = db.collection('ingredients').find({}).toArray();
+
+    res.json(updatedIngredients);
 });
 
-app.put('/api/meals/:id', (req, res) => {
+app.put('/api/meals/:id', async (req, res) => {
     const { id: mealId } = req.body;
     const { date, recipeId } = req.body;
-    const meal = meals.find(meal => meal.id === mealId);
+    // const meal = meals.find(meal => meal.id === mealId);
+
+    const meal = await db.collection('meals').findOne({ id: mealId});
+
     meal.date = (date && new Date(date)) || meal.date;
     meal.recipeId = recipeId || meal.recipeId;
 
-    res.json(meals);
+    await db.collection('meals').updateOne({ id: mealId},{
+        $set: meal,
+    });
+
+    const updatedMeals = await db.collection('meals').find({}).toArray;
+
+    res.json(updatedMeals);
 })
 
 app.delete('/api/ingredients/:name', (res, req) => {
