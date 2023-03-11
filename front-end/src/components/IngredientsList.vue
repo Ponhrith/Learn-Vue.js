@@ -1,10 +1,10 @@
 <template>
-    <div class="listcontainer">
+    <div class="list-container">
         <h3>Ingredients</h3>
         <!--Display Ingredients List-->
         <div v-for="ingredient in ingredients" :key="ingredient.name" class="list-item">
             <h3>{{ ingredient.name }}</h3>
-            <p>{{ ingredient.name }} {{ ingredeint.units }}</p>
+            <p>{{ ingredient.amount }} {{ ingredient.units }}</p>
             <button @click="deleteClicked(ingredient.name)">Delete</button>
         </div>
         <router-link to="/add-ingredient">
