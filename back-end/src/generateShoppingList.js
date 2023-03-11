@@ -13,9 +13,9 @@ export const generateShoppingList = (populatedMeals, userIngredients) => {
     }
 }
     const ShoppingList = Object.keys(missingIngredients).map(ingredientName => {
-        const missingAmountObj = missingIngredients[ingredientName]
+        const missingAmountsObj = missingIngredients[ingredientName]
         const missingAmounts = Object.keys(missingAmountsObj).map(units => {
-           return  `${missingAmountObj[units]} ${units}`;
+           return  `${missingAmountsObj[units]} ${units}`;
         }).join(' + ');
         return `${ingredientName}: ${missingAmounts}`;
     })
