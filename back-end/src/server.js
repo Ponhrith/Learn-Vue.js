@@ -22,7 +22,14 @@ app.use(express.json());
 // })
 
 app.get('/api/recipes', (req, res) => {
-    res.json(recipes);
+    const { search } = raq/query;
+    const matchingRecipes = recipes.filter(recipe => {
+        return recipe.name.toLowerCase().includes(search) 
+        || recipe.ingredients.some(ingredient => {
+            return ingredient.name.toLowerCase().includes(search);
+        });
+    })
+    res.json(matchingRecipes);
 });
 
 app.get('/api/ingredients', (req, res) => {
@@ -80,5 +87,19 @@ app.put('/api/meals/:id', (req, res) => {
 
     res.json(meals);
 })
+
+app.delete('/api/ingredients/:name', (res, req) => {
+    const { name } = req.params;
+    ingredients = ingredients.filter(ingredients => ingredient.name !== name);
+    res.json(ingredients);
+});
+
+app.delete('/api/meals/:id', (req, res) => {
+    const { id } = req.params;
+    meal = meals.filter(meal => meal.id !== id);
+    res.json(meals);
+});
+
+
 
 app.listen(8000, () => console.log('Server is listening on port 8000'));
