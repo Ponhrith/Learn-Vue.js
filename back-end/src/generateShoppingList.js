@@ -1,10 +1,10 @@
 export const generateShoppingList = (populatedMeals, userIngredients) => {
-    let missingIngredients = {   };
+    let missingIngredients = { };
 
     //getting properties for given existing ingredients
     for(let meal of populatedMeals){
         for (let mealIngredient of meal.recipe.ingredients){
-            if (!userIngredients.some(userIngredient => mealIngredient.name === userIngredient)){
+            if (!userIngredients.some(userIngredient => mealIngredient.name === userIngredient.name)){
                 missingIngredients[mealIngredient.name] = {
                     ...(missingIngredients[mealIngredient.name] || {}),
                     [mealIngredient.units] : mealIngredient.amount} +
@@ -14,7 +14,7 @@ export const generateShoppingList = (populatedMeals, userIngredients) => {
 }
     const ShoppingList = Object.keys(missingIngredients).map(ingredientName => {
         const missingAmountObj = missingIngredients[ingredientName]
-        const missingAmounts = Object.keys(missingAmountObj).map(units => {
+        const missingAmounts = Object.keys(missingAmountsObj).map(units => {
            return  `${missingAmountObj[units]} ${units}`;
         }).join(' + ');
         return `${ingredientName}: ${missingAmounts}`;

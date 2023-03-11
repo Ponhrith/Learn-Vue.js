@@ -18,8 +18,8 @@
 
 <script>
 
-import MealsList from '../components/MealsList.vue';
-import IngredientsList from '../components/IngredientsList.vue';
+import MealsList from '../components/MealsList';
+import IngredientsList from '../components/IngredientsList';
 export default {
     name: 'HomePage',
     // props: ['ingredients','meals'],
