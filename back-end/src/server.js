@@ -132,9 +132,12 @@ app.put('/api/meals/:id', async (req, res) => {
     // const meal = meals.find(meal => meal.id === mealId);
 
     const meal = await db.collection('meals').findOne({ id: mealId});
+    const recipes = await db.collection('recipes').find({}).toArray();
+
 
     meal.date = (date && new Date(date)) || meal.date;
     meal.recipeId = recipeId || meal.recipeId;
+    
 
     await db.collection('meals').updateOne({ id: mealId},{
         $set: meal,
@@ -142,7 +145,18 @@ app.put('/api/meals/:id', async (req, res) => {
 
     const updatedMeals = await db.collection('meals').find({}).toArray;
 
-    res.json(updatedMeals);
+    const populatedMeals = updatedMeals.map(meal => {
+        const recipeForMeal = recipes.find(recipe => recipe.id === meal.recipeId);
+        return{
+            //spread operator
+            ...meal,
+           
+            recipe: recipeForMeal,
+
+        };
+    });
+
+    res.json(populatedMeals);
 })
 
 app.delete('/api/ingredients/:name', (res, req) => {
