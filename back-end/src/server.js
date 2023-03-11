@@ -8,6 +8,8 @@ const startServer = async() => {
     
 const app = express();
 
+// const { v4: uuid } = require('uuid');
+
 //take care of request body
 app.use(express.json());
 
@@ -119,7 +121,7 @@ app.put('/api/ingredients/:name', async (req, res) => {
         $set: ingredient,
     });
 
-    const updatedIngredients = db.collection('ingredients').find({}).toArray();
+    const updatedIngredients = await db.collection('ingredients').find({}).toArray();
 
     res.json(updatedIngredients);
 });
