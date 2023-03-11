@@ -1,33 +1,35 @@
 import express from 'express';
+import { MongoClient } from 'mongodb';
 import { v4 as uuid } from 'uuid';
-import { recipes } from './recipes.js';
 import { generateShoppingList } from './generateShoppingList.js';
 
-let ingredients = [
-    { name: 'Honey', amount: 3, units: 'tablespoons' },
-    { name: 'Self-Rising Flour', amount: 10, units: 'cups'},
-];
 
-let meals = [
-    { id: '1234', date: new Date(), recipeId: '123' }
-    { id: '1234', date: new Date(), recipeId: '234' }
-    { id: '1234', date: new Date(), recipeId: '245' }
-]
-
-
-
+const startServer = async() => {
+    
 const app = express();
 
 //take care of request body
 app.use(express.json());
+
+const client = await MongoClient.connect('mongodb://localhost:27017', {
+    //poolSize tell Mongodb to keep a certain of connections open
+    maxPoolSize: 10,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+const db = client.db('fsv-meal-tracker');
 
 //path we're listening on, we called it a handler or endpoint
 // app.get('/', (req, res) => {
 //     res.send('Success!!');
 // })
 
-app.get('/api/recipes', (req, res) => {
+app.get('/api/recipes', async (req, res) => {
     const { search } = raq/query;
+
+    const recipes = await db.collection('recipes').find({}).toArray();
+
     const matchingRecipes = recipes.filter(recipe => {
         return recipe.name.toLowerCase().includes(search) 
         || recipe.ingredients.some(ingredient => {
@@ -37,12 +39,15 @@ app.get('/api/recipes', (req, res) => {
     res.json(matchingRecipes);
 });
 
-app.get('/api/ingredients', (req, res) => {
+app.get('/api/ingredients', async (req, res) => {
+    const ingredients = await db.collection('ingredients').find({}.toArray());
     res.json(ingredients);
    
 });
 
-app.get('/api/meals', (req, res) => {
+app.get('/api/meals', async (req, res) => {
+    const meals = await db.collection('meals').find({}).toArray();
+    const recipes = await db.collection('recipes').find({}).toArray();
     const populatedMeals = meals.map(meal => {
         const recipeForMeal = recipes.find(recipe => recipe.id === meal.recipeId);
         return{
@@ -56,17 +61,45 @@ app.get('/api/meals', (req, res) => {
     res.json(populatedMeals);
 });
 
-app.post('/api/ingredients', (req, res) => {
+app.post('/api/ingredients', async (req, res) => {
+
     const {name, amount, units} = req.body;
     //put into array
-    ingredients.push({ name, amount, units });
+    // ingredients.push({ name, amount, units });
+    await db.collection('ingredients').insertOne({
+        name,
+        amount,
+        units
+    });
+
+    const recipes = await db.collection('recipes').find({}).toArray();
+
     res.json(ingredients);
 });
 
-app.post('/api/meals', (req, res) => {
+app.post('/api/meals', async (req, res) => {
     const { date, recipeId } = req.body;
-    meals.push({  id: uuid(), date: new Date(date), recipeId });
-    res.json(meals);
+    // meals.push({  id: uuid(), date: new Date(date), recipeId });
+    await db.collection('meals').insertOne({
+        id: uuid(),
+        date: new Date(date),
+        recipeId,
+    });
+    const meals = await db.collection('meals').find({}).toArray();
+    const recipes = await db.collection('recipes').find({}).toArray();
+    const populatedMeals = meals.map(meal => {
+        const recipeForMeal = recipes.find(recipe => recipe.id === meal.recipeId);
+        return{
+            //spread operator
+            ...meal,
+           
+            recipe: recipeForMeal,
+
+        };
+    });
+
+
+    res.json(populatedMeals);
 });
 
 // /api/ingredients/Apples
@@ -105,7 +138,10 @@ app.delete('/api/meals/:id', (req, res) => {
     res.json(meals);
 });
 
-app.get('/api/shopping-list', (req, res) => {
+app.get('/api/shopping-list', async (req, res) => {
+    const meals = await db.collection('meals').find({}).toArray();
+    const recipes = await db.collection('recipes').find({}).toArray();
+    const ingredients = await db.collection('ingredients').find({}).toArray();
     const populatedMeals = meals.map(meal => {
         const recipeForMeal = recipes.find(recipe => recipe.id === meal.recipeId);
         return{
@@ -116,7 +152,7 @@ app.get('/api/shopping-list', (req, res) => {
 
         };
     });
-    const shoppingList = (generateShoppingList(populatedMeals, ingredients));\
+    const shoppingList = (generateShoppingList(populatedMeals, ingredients));
     res.json(shoppingList);
 
 
@@ -125,3 +161,5 @@ app.get('/api/shopping-list', (req, res) => {
 
 
 app.listen(8000, () => console.log('Server is listening on port 8000'));
+
+}
