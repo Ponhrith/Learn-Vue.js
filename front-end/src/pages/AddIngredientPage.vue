@@ -24,7 +24,6 @@
 <script>
 export default {
     name: 'AddIngredientPage',
-    props: ['ingredients'],
     data(){
         return{
             name: '',
