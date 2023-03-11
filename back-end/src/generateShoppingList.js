@@ -12,12 +12,12 @@ export const generateShoppingList = (populatedMeals, userIngredients) => {
         }
     }
 }
-    const ShoppingList = Object.keys(missingIngredients).map(ingredientName => {
+    const shoppingList = Object.keys(missingIngredients).map(ingredientName => {
         const missingAmountsObj = missingIngredients[ingredientName]
         const missingAmounts = Object.keys(missingAmountsObj).map(units => {
            return  `${missingAmountsObj[units]} ${units}`;
         }).join(' + ');
         return `${ingredientName}: ${missingAmounts}`;
     })
-    return ShoppingList;
+    return shoppingList;
 }
