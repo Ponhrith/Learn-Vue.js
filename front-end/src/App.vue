@@ -21,14 +21,14 @@ export default {
     return{
         ingredients: [],
         meals: [],
-        recipes: [],
+        
     }
     },
     created(){
       axios.get('http://localhost:8000/api/ingredients')
       .then(response => {
         console.log(response.data);
-        this.ingredients = response.data
+        this.ingredients = response.data;
       });
       axios.get('http://localhost:8000/api/meals')
         .then(response => {
@@ -60,7 +60,7 @@ export default {
             ...meal,
             date: new Date(meal.date),
           }));
-        })
+        });
       },
       removeMeal({ id }){
         // this.meals = this.meals.filter(meal => {
@@ -76,7 +76,7 @@ export default {
           }));
         })
       },
-      deleteIngredien(ingredientName){
+      deleteIngredient(ingredientName){
         axios.delete(`http://localhost:8000/api/ingredients/${ingredientName}`)
         .then(response => {
           this.ingredients = response.data;
@@ -91,8 +91,8 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+ 
   color: #2c3e50;
-  margin-top: 60px;
+  
 }
 </style>
