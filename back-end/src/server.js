@@ -1,6 +1,7 @@
 import express from 'express';
 import { v4 as uuid } from 'uuid';
 import { recipes } from './recipes.js';
+import { generateShoppingList } from './generateShoppingList.js';
 
 let ingredients = [
     { name: 'Honey', amount: 3, units: 'tablespoons' },
@@ -9,7 +10,11 @@ let ingredients = [
 
 let meals = [
     { id: '1234', date: new Date(), recipeId: '123' }
+    { id: '1234', date: new Date(), recipeId: '234' }
+    { id: '1234', date: new Date(), recipeId: '245' }
 ]
+
+
 
 const app = express();
 
@@ -98,6 +103,23 @@ app.delete('/api/meals/:id', (req, res) => {
     const { id } = req.params;
     meal = meals.filter(meal => meal.id !== id);
     res.json(meals);
+});
+
+app.get('/api/shopping-list', (req, res) => {
+    const populatedMeals = meals.map(meal => {
+        const recipeForMeal = recipes.find(recipe => recipe.id === meal.recipeId);
+        return{
+            //spread operator
+            ...meal,
+           
+            recipe: recipeForMeal,
+
+        };
+    });
+    const shoppingList = (generateShoppingList(populatedMeals, ingredients));\
+    res.json(shoppingList);
+
+
 });
 
 
