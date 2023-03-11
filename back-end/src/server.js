@@ -172,7 +172,22 @@ app.delete('/api/meals/:id', async (req, res) => {
     // meal = meals.filter(meal => meal.id !== id);
     await db.collection('meals').deleteOne({ id });
     const meals = await db.collection('meals').find({}).toArray();
-    res.json(meals);
+    const recipes = await db.collection('recipes').find({}).toArray();
+
+
+    const populatedMeals = meals.map(meal => {
+        const recipeForMeal = recipes.find(recipe => recipe.id === meal.recipeId);
+        return{
+            //spread operator
+            ...meal,
+           
+            recipe: recipeForMeal,
+
+        };
+    });
+
+
+    res.json(populatedMeals);
 });
 
 app.get('/api/shopping-list', async (req, res) => {
