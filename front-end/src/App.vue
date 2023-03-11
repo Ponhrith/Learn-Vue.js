@@ -6,10 +6,12 @@
   @addIngredient="addIngredient"
   @addMeal="addMeal"
   @removeMeal="removeMeal"
+  @deleteIngredient="deleteIngredient"
   ></router-view>
 </template>
 
 <script>
+
 
 import axios from 'axios';
 
@@ -60,12 +62,25 @@ export default {
           }));
         })
       },
-      removeMeal({ date }){
-        this.meals = this.meals.filter(meal => {
-          return meal.date.getYear() !== date.getYear()
-                    || meal.date.getMonth() !== date.getMonth()
-                    || meal.date.getDate() !== date.getDate();
+      removeMeal({ id }){
+        // this.meals = this.meals.filter(meal => {
+        //   return meal.date.getYear() !== date.getYear()
+        //             || meal.date.getMonth() !== date.getMonth()
+        //             || meal.date.getDate() !== date.getDate();
+        // })
+        axios.delete(`http://localhost:8000/api/meals/${id}`)
+        .then(response => {
+          this.meals = response.data.map(meal => ({
+            ...meal,
+            date: new Date(meal.date),
+          }));
         })
+      },
+      deleteIngredien(ingredientName){
+        axios.delete(`http://localhost:8000/api/ingredients/${ingredientName}`)
+        .then(response => {
+          this.ingredients = response.data;
+        });
       }
     }
 }
