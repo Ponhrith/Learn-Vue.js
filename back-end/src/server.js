@@ -159,15 +159,19 @@ app.put('/api/meals/:id', async (req, res) => {
     res.json(populatedMeals);
 })
 
-app.delete('/api/ingredients/:name', (res, req) => {
+app.delete('/api/ingredients/:name', async (res, req) => {
     const { name } = req.params;
-    ingredients = ingredients.filter(ingredients => ingredient.name !== name);
+    // ingredients = ingredients.filter(ingredients => ingredient.name !== name);
+    await db.collection('ingredients').deleteOne({ name });
+    const ingredients = await db.collection('ingredients').find({}).toArray();
     res.json(ingredients);
 });
 
-app.delete('/api/meals/:id', (req, res) => {
+app.delete('/api/meals/:id', async (req, res) => {
     const { id } = req.params;
-    meal = meals.filter(meal => meal.id !== id);
+    // meal = meals.filter(meal => meal.id !== id);
+    await db.collection('meals').deleteOne({ id });
+    const meals = await db.collection('meals').find({}).toArray();
     res.json(meals);
 });
 
