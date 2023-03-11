@@ -1,3 +1,4 @@
+
 <template>
   <h1>Meal Tracker</h1>
   <router-view 
